@@ -1,0 +1,1745 @@
+	<html><head>
+	<TITLE>RGL model</TITLE>
+    </head>
+	<body onload="webGLStart();"> 
+    
+    <div align="center">
+	<script src="CanvasMatrix.js" type="text/javascript"></script>
+	<canvas id="textureCanvas" style="display: none;" width="256" height="256">
+        <img src="snapshot.png" alt="snapshot" width=257/><br>
+	Your browser does not support the HTML5 canvas element.</canvas>
+
+	<!-- ****** surface object 471 ****** -->
+	<script id="vshader471" type="x-shader/x-vertex">
+	attribute vec3 aPos;
+	attribute vec4 aCol;
+	uniform mat4 mvMatrix;
+	uniform mat4 prMatrix;
+	varying vec4 vCol;
+	varying vec4 vPosition;
+	attribute vec3 aNorm;
+	uniform mat4 normMatrix;
+	varying vec3 vNormal;
+	void main(void) {
+	  vPosition = mvMatrix * vec4(aPos, 1.);
+	  gl_Position = prMatrix * vPosition;
+	  vCol = aCol;
+	  vNormal = normalize((normMatrix * vec4(aNorm, 1.)).xyz);
+	}
+	</script>
+
+	<script id="fshader471" type="x-shader/x-fragment"> 
+	#ifdef GL_ES
+	precision highp float;
+	#endif
+	varying vec4 vCol; // carries alpha
+	varying vec4 vPosition;
+	varying vec3 vNormal;
+	void main(void) {
+	  vec3 eye = normalize(-vPosition.xyz);
+	  const vec3 emission = vec3(0., 0., 0.);
+	  const vec3 ambient1 = vec3(0., 0., 0.);
+	  const vec3 specular1 = vec3(1., 1., 1.);// light*material
+	  const float shininess1 = 50.;
+	  vec4 colDiff1 = vec4(vCol.rgb * vec3(1., 1., 1.), vCol.a);
+	  const vec3 lightDir1 = vec3(0., 0., 1.);
+	  vec3 halfVec1 = normalize(lightDir1 + eye);
+      vec4 lighteffect = vec4(emission, 0.);
+	  vec3 n = normalize(vNormal);
+	  n = -faceforward(n, n, eye);
+	  vec3 col1 = ambient1;
+	  float nDotL1 = dot(n, lightDir1);
+	  col1 = col1 + max(nDotL1, 0.) * colDiff1.rgb;
+	  col1 = col1 + pow(max(dot(halfVec1, n), 0.), shininess1) * specular1;
+	  lighteffect = lighteffect + vec4(col1, colDiff1.a);
+	  gl_FragColor = lighteffect;
+	}
+	</script> 
+
+	<!-- ****** lines object 472 ****** -->
+	<script id="vshader472" type="x-shader/x-vertex">
+	attribute vec3 aPos;
+	attribute vec4 aCol;
+	uniform mat4 mvMatrix;
+	uniform mat4 prMatrix;
+	varying vec4 vCol;
+	varying vec4 vPosition;
+	void main(void) {
+	  vPosition = mvMatrix * vec4(aPos, 1.);
+	  gl_Position = prMatrix * vPosition;
+	  vCol = aCol;
+	}
+	</script>
+
+	<script id="fshader472" type="x-shader/x-fragment"> 
+	#ifdef GL_ES
+	precision highp float;
+	#endif
+	varying vec4 vCol; // carries alpha
+	varying vec4 vPosition;
+	void main(void) {
+      vec4 colDiff = vCol;
+	  vec4 lighteffect = colDiff;
+	  gl_FragColor = lighteffect;
+	}
+	</script> 
+
+	<!-- ****** text object 474 ****** -->
+	<script id="vshader474" type="x-shader/x-vertex">
+	attribute vec3 aPos;
+	attribute vec4 aCol;
+	uniform mat4 mvMatrix;
+	uniform mat4 prMatrix;
+	varying vec4 vCol;
+	varying vec4 vPosition;
+	attribute vec2 aTexcoord;
+	varying vec2 vTexcoord;
+	uniform vec2 textScale;
+	attribute vec2 aOfs;
+	void main(void) {
+	  vCol = aCol;
+	  vTexcoord = aTexcoord;
+	  vec4 pos = prMatrix * mvMatrix * vec4(aPos, 1.);
+	  pos = pos/pos.w;
+	  gl_Position = pos + vec4(aOfs*textScale, 0.,0.);
+	}
+	</script>
+
+	<script id="fshader474" type="x-shader/x-fragment"> 
+	#ifdef GL_ES
+	precision highp float;
+	#endif
+	varying vec4 vCol; // carries alpha
+	varying vec4 vPosition;
+	varying vec2 vTexcoord;
+	uniform sampler2D uSampler;
+	void main(void) {
+      vec4 colDiff = vCol;
+	  vec4 lighteffect = colDiff;
+	  vec4 textureColor = lighteffect*texture2D(uSampler, vTexcoord);
+	  if (textureColor.a < 0.1)
+	    discard;
+	  else
+	    gl_FragColor = textureColor;
+	}
+	</script> 
+
+	<!-- ****** text object 475 ****** -->
+	<script id="vshader475" type="x-shader/x-vertex">
+	attribute vec3 aPos;
+	attribute vec4 aCol;
+	uniform mat4 mvMatrix;
+	uniform mat4 prMatrix;
+	varying vec4 vCol;
+	varying vec4 vPosition;
+	attribute vec2 aTexcoord;
+	varying vec2 vTexcoord;
+	uniform vec2 textScale;
+	attribute vec2 aOfs;
+	void main(void) {
+	  vCol = aCol;
+	  vTexcoord = aTexcoord;
+	  vec4 pos = prMatrix * mvMatrix * vec4(aPos, 1.);
+	  pos = pos/pos.w;
+	  gl_Position = pos + vec4(aOfs*textScale, 0.,0.);
+	}
+	</script>
+
+	<script id="fshader475" type="x-shader/x-fragment"> 
+	#ifdef GL_ES
+	precision highp float;
+	#endif
+	varying vec4 vCol; // carries alpha
+	varying vec4 vPosition;
+	varying vec2 vTexcoord;
+	uniform sampler2D uSampler;
+	void main(void) {
+      vec4 colDiff = vCol;
+	  vec4 lighteffect = colDiff;
+	  vec4 textureColor = lighteffect*texture2D(uSampler, vTexcoord);
+	  if (textureColor.a < 0.1)
+	    discard;
+	  else
+	    gl_FragColor = textureColor;
+	}
+	</script> 
+
+	<!-- ****** text object 476 ****** -->
+	<script id="vshader476" type="x-shader/x-vertex">
+	attribute vec3 aPos;
+	attribute vec4 aCol;
+	uniform mat4 mvMatrix;
+	uniform mat4 prMatrix;
+	varying vec4 vCol;
+	varying vec4 vPosition;
+	attribute vec2 aTexcoord;
+	varying vec2 vTexcoord;
+	uniform vec2 textScale;
+	attribute vec2 aOfs;
+	void main(void) {
+	  vCol = aCol;
+	  vTexcoord = aTexcoord;
+	  vec4 pos = prMatrix * mvMatrix * vec4(aPos, 1.);
+	  pos = pos/pos.w;
+	  gl_Position = pos + vec4(aOfs*textScale, 0.,0.);
+	}
+	</script>
+
+	<script id="fshader476" type="x-shader/x-fragment"> 
+	#ifdef GL_ES
+	precision highp float;
+	#endif
+	varying vec4 vCol; // carries alpha
+	varying vec4 vPosition;
+	varying vec2 vTexcoord;
+	uniform sampler2D uSampler;
+	void main(void) {
+      vec4 colDiff = vCol;
+	  vec4 lighteffect = colDiff;
+	  vec4 textureColor = lighteffect*texture2D(uSampler, vTexcoord);
+	  if (textureColor.a < 0.1)
+	    discard;
+	  else
+	    gl_FragColor = textureColor;
+	}
+	</script> 
+
+	<!-- ****** lines object 477 ****** -->
+	<script id="vshader477" type="x-shader/x-vertex">
+	attribute vec3 aPos;
+	attribute vec4 aCol;
+	uniform mat4 mvMatrix;
+	uniform mat4 prMatrix;
+	varying vec4 vCol;
+	varying vec4 vPosition;
+	void main(void) {
+	  vPosition = mvMatrix * vec4(aPos, 1.);
+	  gl_Position = prMatrix * vPosition;
+	  vCol = aCol;
+	}
+	</script>
+
+	<script id="fshader477" type="x-shader/x-fragment"> 
+	#ifdef GL_ES
+	precision highp float;
+	#endif
+	varying vec4 vCol; // carries alpha
+	varying vec4 vPosition;
+	void main(void) {
+      vec4 colDiff = vCol;
+	  vec4 lighteffect = colDiff;
+	  gl_FragColor = lighteffect;
+	}
+	</script> 
+
+	<!-- ****** text object 478 ****** -->
+	<script id="vshader478" type="x-shader/x-vertex">
+	attribute vec3 aPos;
+	attribute vec4 aCol;
+	uniform mat4 mvMatrix;
+	uniform mat4 prMatrix;
+	varying vec4 vCol;
+	varying vec4 vPosition;
+	attribute vec2 aTexcoord;
+	varying vec2 vTexcoord;
+	uniform vec2 textScale;
+	attribute vec2 aOfs;
+	void main(void) {
+	  vCol = aCol;
+	  vTexcoord = aTexcoord;
+	  vec4 pos = prMatrix * mvMatrix * vec4(aPos, 1.);
+	  pos = pos/pos.w;
+	  gl_Position = pos + vec4(aOfs*textScale, 0.,0.);
+	}
+	</script>
+
+	<script id="fshader478" type="x-shader/x-fragment"> 
+	#ifdef GL_ES
+	precision highp float;
+	#endif
+	varying vec4 vCol; // carries alpha
+	varying vec4 vPosition;
+	varying vec2 vTexcoord;
+	uniform sampler2D uSampler;
+	void main(void) {
+      vec4 colDiff = vCol;
+	  vec4 lighteffect = colDiff;
+	  vec4 textureColor = lighteffect*texture2D(uSampler, vTexcoord);
+	  if (textureColor.a < 0.1)
+	    discard;
+	  else
+	    gl_FragColor = textureColor;
+	}
+	</script> 
+
+	<!-- ****** lines object 479 ****** -->
+	<script id="vshader479" type="x-shader/x-vertex">
+	attribute vec3 aPos;
+	attribute vec4 aCol;
+	uniform mat4 mvMatrix;
+	uniform mat4 prMatrix;
+	varying vec4 vCol;
+	varying vec4 vPosition;
+	void main(void) {
+	  vPosition = mvMatrix * vec4(aPos, 1.);
+	  gl_Position = prMatrix * vPosition;
+	  vCol = aCol;
+	}
+	</script>
+
+	<script id="fshader479" type="x-shader/x-fragment"> 
+	#ifdef GL_ES
+	precision highp float;
+	#endif
+	varying vec4 vCol; // carries alpha
+	varying vec4 vPosition;
+	void main(void) {
+      vec4 colDiff = vCol;
+	  vec4 lighteffect = colDiff;
+	  gl_FragColor = lighteffect;
+	}
+	</script> 
+
+	<!-- ****** text object 480 ****** -->
+	<script id="vshader480" type="x-shader/x-vertex">
+	attribute vec3 aPos;
+	attribute vec4 aCol;
+	uniform mat4 mvMatrix;
+	uniform mat4 prMatrix;
+	varying vec4 vCol;
+	varying vec4 vPosition;
+	attribute vec2 aTexcoord;
+	varying vec2 vTexcoord;
+	uniform vec2 textScale;
+	attribute vec2 aOfs;
+	void main(void) {
+	  vCol = aCol;
+	  vTexcoord = aTexcoord;
+	  vec4 pos = prMatrix * mvMatrix * vec4(aPos, 1.);
+	  pos = pos/pos.w;
+	  gl_Position = pos + vec4(aOfs*textScale, 0.,0.);
+	}
+	</script>
+
+	<script id="fshader480" type="x-shader/x-fragment"> 
+	#ifdef GL_ES
+	precision highp float;
+	#endif
+	varying vec4 vCol; // carries alpha
+	varying vec4 vPosition;
+	varying vec2 vTexcoord;
+	uniform sampler2D uSampler;
+	void main(void) {
+      vec4 colDiff = vCol;
+	  vec4 lighteffect = colDiff;
+	  vec4 textureColor = lighteffect*texture2D(uSampler, vTexcoord);
+	  if (textureColor.a < 0.1)
+	    discard;
+	  else
+	    gl_FragColor = textureColor;
+	}
+	</script> 
+
+	<!-- ****** lines object 481 ****** -->
+	<script id="vshader481" type="x-shader/x-vertex">
+	attribute vec3 aPos;
+	attribute vec4 aCol;
+	uniform mat4 mvMatrix;
+	uniform mat4 prMatrix;
+	varying vec4 vCol;
+	varying vec4 vPosition;
+	void main(void) {
+	  vPosition = mvMatrix * vec4(aPos, 1.);
+	  gl_Position = prMatrix * vPosition;
+	  vCol = aCol;
+	}
+	</script>
+
+	<script id="fshader481" type="x-shader/x-fragment"> 
+	#ifdef GL_ES
+	precision highp float;
+	#endif
+	varying vec4 vCol; // carries alpha
+	varying vec4 vPosition;
+	void main(void) {
+      vec4 colDiff = vCol;
+	  vec4 lighteffect = colDiff;
+	  gl_FragColor = lighteffect;
+	}
+	</script> 
+
+	<!-- ****** text object 482 ****** -->
+	<script id="vshader482" type="x-shader/x-vertex">
+	attribute vec3 aPos;
+	attribute vec4 aCol;
+	uniform mat4 mvMatrix;
+	uniform mat4 prMatrix;
+	varying vec4 vCol;
+	varying vec4 vPosition;
+	attribute vec2 aTexcoord;
+	varying vec2 vTexcoord;
+	uniform vec2 textScale;
+	attribute vec2 aOfs;
+	void main(void) {
+	  vCol = aCol;
+	  vTexcoord = aTexcoord;
+	  vec4 pos = prMatrix * mvMatrix * vec4(aPos, 1.);
+	  pos = pos/pos.w;
+	  gl_Position = pos + vec4(aOfs*textScale, 0.,0.);
+	}
+	</script>
+
+	<script id="fshader482" type="x-shader/x-fragment"> 
+	#ifdef GL_ES
+	precision highp float;
+	#endif
+	varying vec4 vCol; // carries alpha
+	varying vec4 vPosition;
+	varying vec2 vTexcoord;
+	uniform sampler2D uSampler;
+	void main(void) {
+      vec4 colDiff = vCol;
+	  vec4 lighteffect = colDiff;
+	  vec4 textureColor = lighteffect*texture2D(uSampler, vTexcoord);
+	  if (textureColor.a < 0.1)
+	    discard;
+	  else
+	    gl_FragColor = textureColor;
+	}
+	</script> 
+
+	<!-- ****** lines object 483 ****** -->
+	<script id="vshader483" type="x-shader/x-vertex">
+	attribute vec3 aPos;
+	attribute vec4 aCol;
+	uniform mat4 mvMatrix;
+	uniform mat4 prMatrix;
+	varying vec4 vCol;
+	varying vec4 vPosition;
+	void main(void) {
+	  vPosition = mvMatrix * vec4(aPos, 1.);
+	  gl_Position = prMatrix * vPosition;
+	  vCol = aCol;
+	}
+	</script>
+
+	<script id="fshader483" type="x-shader/x-fragment"> 
+	#ifdef GL_ES
+	precision highp float;
+	#endif
+	varying vec4 vCol; // carries alpha
+	varying vec4 vPosition;
+	void main(void) {
+      vec4 colDiff = vCol;
+	  vec4 lighteffect = colDiff;
+	  gl_FragColor = lighteffect;
+	}
+	</script> 
+
+
+	<script type="text/javascript"> 
+
+	function getShader ( gl, id ){
+	   var shaderScript = document.getElementById ( id );
+	   var str = "";
+	   var k = shaderScript.firstChild;
+	   while ( k ){
+	     if ( k.nodeType == 3 ) str += k.textContent;
+	     k = k.nextSibling;
+	   }
+	   var shader;
+	   if ( shaderScript.type == "x-shader/x-fragment" )
+             shader = gl.createShader ( gl.FRAGMENT_SHADER );
+	   else if ( shaderScript.type == "x-shader/x-vertex" )
+             shader = gl.createShader(gl.VERTEX_SHADER);
+	   else return null;
+	   gl.shaderSource(shader, str);
+	   gl.compileShader(shader);
+	   if (gl.getShaderParameter(shader, gl.COMPILE_STATUS) == 0)
+	     alert(gl.getShaderInfoLog(shader));
+	   return shader;
+	}
+
+	var min = Math.min;
+	var max = Math.max;
+	var sqrt = Math.sqrt;
+	var sin = Math.sin;
+	var acos = Math.acos;
+	var tan = Math.tan;
+	var SQRT2 = Math.SQRT2;
+	var PI = Math.PI;
+	var log = Math.log;
+	var exp = Math.exp;
+
+	function webGLStart() {
+	   var debug = function(msg) {
+	     document.getElementById("debug").innerHTML = msg;
+	   }
+	   debug("");
+
+	   var canvas = document.getElementById("canvas");
+	   if (!window.WebGLRenderingContext){
+	     debug("<img src=\"snapshot.png\" alt=\"snapshot\" width=257/><br> Your browser does not support WebGL. See <a href=\"http://get.webgl.org\">http://get.webgl.org</a>");
+	     return;
+	   }
+	   var gl;
+	   try {
+	     // Try to grab the standard context. If it fails, fallback to experimental.
+	     gl = canvas.getContext("webgl") 
+	       || canvas.getContext("experimental-webgl");
+	   }
+	   catch(e) {}
+	   if ( !gl ) {
+	     debug("<img src=\"snapshot.png\" alt=\"snapshot\" width=257/><br> Your browser appears to support WebGL, but did not create a WebGL context.  See <a href=\"http://get.webgl.org\">http://get.webgl.org</a>");
+	     return;
+	   }
+	   var width = 257;  var height = 257;
+	   canvas.width = width;   canvas.height = height;
+	   var prMatrix = new CanvasMatrix4();
+	   var mvMatrix = new CanvasMatrix4();
+	   var normMatrix = new CanvasMatrix4();
+	   var saveMat = new CanvasMatrix4();
+	   saveMat.makeIdentity();
+	   var distance;
+	   var posLoc = 0;
+	   var colLoc = 1;
+
+       var zoom = new Object();
+       var fov = new Object();
+       var userMatrix = new Object();
+       var activeSubscene = 415;
+       zoom[415] = 1;
+       fov[415] = 30;
+       userMatrix[415] = new CanvasMatrix4();
+       userMatrix[415].load([
+	    1, 0, 0, 0,
+	    0, 0.3420201, -0.9396926, 0,
+	    0, 0.9396926, 0.3420201, 0,
+	    0, 0, 0, 1
+		]);
+	   function getPowerOfTwo(value) {
+	     var pow = 1;
+	     while(pow<value) {
+	       pow *= 2;
+	     }
+	     return pow;
+	   }
+
+	   function handleLoadedTexture(texture, textureCanvas) {
+	     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+
+	     gl.bindTexture(gl.TEXTURE_2D, texture);
+	     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textureCanvas);
+	     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+	     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+	     gl.generateMipmap(gl.TEXTURE_2D);
+
+	     gl.bindTexture(gl.TEXTURE_2D, null);
+	   }
+	   
+	   function loadImageToTexture(filename, texture) {   
+	     var canvas = document.getElementById("textureCanvas");
+	     var ctx = canvas.getContext("2d");
+	     var image = new Image();
+	     
+	     image.onload = function() {
+	       var w = image.width;
+	       var h = image.height;
+	       var canvasX = getPowerOfTwo(w);
+	       var canvasY = getPowerOfTwo(h);
+	       canvas.width = canvasX;
+	       canvas.height = canvasY;
+	       ctx.imageSmoothingEnabled = true;
+	       ctx.drawImage(image, 0, 0, canvasX, canvasY);
+	       handleLoadedTexture(texture, canvas);
+   	       drawScene();
+	     }
+	     image.src = filename;
+	   }  	   
+
+	   function drawTextToCanvas(text, cex) {
+	     var canvasX, canvasY;
+	     var textX, textY;
+
+	     var textHeight = 20 * cex;
+	     var textColour = "white";
+	     var fontFamily = "Arial";
+
+	     var backgroundColour = "rgba(0,0,0,0)";
+
+	     var canvas = document.getElementById("textureCanvas");
+	     var ctx = canvas.getContext("2d");
+
+	     ctx.font = textHeight+"px "+fontFamily;
+
+	     canvasX = 1;
+	     var widths = [];
+	     for (var i = 0; i < text.length; i++)  {
+	       widths[i] = ctx.measureText(text[i]).width;
+	       canvasX = (widths[i] > canvasX) ? widths[i] : canvasX;
+	     }	  
+	     canvasX = getPowerOfTwo(canvasX);
+
+	     var offset = 2*textHeight; // offset to first baseline
+	     var skip = 2*textHeight;   // skip between baselines	  
+	     canvasY = getPowerOfTwo(offset + text.length*skip);
+	     
+	     canvas.width = canvasX;
+	     canvas.height = canvasY;
+
+	     ctx.fillStyle = backgroundColour;
+	     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+	     ctx.fillStyle = textColour;
+	     ctx.textAlign = "left";
+
+	     ctx.textBaseline = "alphabetic";
+	     ctx.font = textHeight+"px "+fontFamily;
+
+	     for(var i = 0; i < text.length; i++) {
+	       textY = i*skip + offset;
+	       ctx.fillText(text[i], 0,  textY);
+	     }
+	     return {canvasX:canvasX, canvasY:canvasY,
+	             widths:widths, textHeight:textHeight,
+	             offset:offset, skip:skip};
+	   }
+
+
+	   // ****** surface object 471 ******
+	   var prog471  = gl.createProgram();
+	   gl.attachShader(prog471, getShader( gl, "vshader471" ));
+	   gl.attachShader(prog471, getShader( gl, "fshader471" ));
+	   //  Force aPos to location 0, aCol to location 1 
+	   gl.bindAttribLocation(prog471, 0, "aPos");
+	   gl.bindAttribLocation(prog471, 1, "aCol");
+	   gl.linkProgram(prog471);
+	   var v=new Float32Array([
+	    0.5, 0, 32.356, 1, 1, 0.3882353, 1, -1.161326e-05, 1, 3.653049e-07,
+	    0.6, 0, 36.38667, 1, 1, 0.5686275, 1, -8.825496e-07, 1, 3.731615e-07,
+	    0.7, 0, 32.03333, 1, 1, 0.3882353, 1, 0.0001189035, 1, 1.45285e-06,
+	    0.8, 0, 16.02267, 1, 0.8941177, 0, 1, 0.9998562, 0.0009901745, 0.01692536,
+	    0.9, 0, 45.18667, 1, 1, 0.9764706, 1, -0.0002201334, 1, 1.193126e-06,
+	    1, 0, 37.23333, 1, 1, 0.6117647, 1, 3.895459e-05, 1, 3.228155e-07,
+	    1.1, 0, 12.48667, 1, 0.8313726, 0, 1, 1.278583e-05, 1, 4.369508e-07,
+	    1.2, 0, 24.126, 1, 1, 0.02352941, 1, -1.504872e-06, 1, 4.593405e-07,
+	    1.3, 0, 13.168, 1, 0.8470588, 0, 1, -1.081354e-05, 1, 6.942597e-07,
+	    1.4, 0, 13.918, 1, 0.8470588, 0, 1, 5.82436e-06, 1, 8.582846e-07,
+	    1.5, 0, 22.64467, 1, 0.9843137, 0, 1, -9.310895e-06, 1, 5.339726e-07,
+	    1.6, 0, 25.40067, 1, 1, 0.06666667, 1, 9.459554e-05, 1, 5.365839e-07,
+	    1.7, 0, -2.683333, 1, 0.6, 0, 1, -2.274896e-05, 1, 9.64066e-07,
+	    1.8, 0, 1.462, 1, 0.6627451, 0, 1, -2.988437e-05, 1, 1.131725e-06,
+	    0.5, 1e-05, 5.783333, 1, 0.7215686, 0, 1, 3.733748e-05, 1, 7.288459e-07,
+	    0.6, 1e-05, 8.160666, 1, 0.7686275, 0, 1, 5.585516e-06, 1, 5.74746e-07,
+	    0.7, 1e-05, 7.508667, 1, 0.7529412, 0, 1, -2.47188e-05, 1, 7.435235e-07,
+	    0.8, 1e-05, 21.78333, 1, 0.9686275, 0, 1, 2.342684e-05, 1, 1.590321e-06,
+	    0.9, 1e-05, -5.888667, 1, 0.5529412, 0, 1, 7.483392e-05, 1, 9.964317e-07,
+	    1, 1e-05, -1.412, 1, 0.6156863, 0, 1, 1.048463e-05, 1, 5.640742e-07,
+	    1.1, 1e-05, -4.816, 1, 0.5686275, 0, 1, 9.237846e-06, 1, 6.118503e-07,
+	    1.2, 1e-05, -5.890666, 1, 0.5529412, 0, 1, 3.653066e-06, 1, 6.703773e-07,
+	    1.3, 1e-05, -3.692, 1, 0.5843138, 0, 1, -8.307434e-06, 1, 6.636175e-07,
+	    1.4, 1e-05, 5.966667, 1, 0.7215686, 0, 1, -8.160783e-06, 1, 6.905174e-07,
+	    1.5, 1e-05, -8.151334, 1, 0.5058824, 0, 1, 6.077125e-05, 1, 9.135753e-07,
+	    1.6, 1e-05, -18.30467, 1, 0.3529412, 0, 1, -2.405018e-05, 1, 1.368644e-06,
+	    1.7, 1e-05, -10.01467, 1, 0.4784314, 0, 1, -1.340259e-05, 1, 1.655226e-06,
+	    1.8, 1e-05, -9.656, 1, 0.4941176, 0, 1, -2.797388e-05, 1, 1.700277e-06,
+	    0.5, 2e-05, -0.2026667, 1, 0.6313726, 0, 1, 2.834173e-05, 1, 8.288342e-07,
+	    0.6, 2e-05, -11.28667, 1, 0.4627451, 0, 1, 4.336409e-05, 1, 7.566353e-07,
+	    0.7, 2e-05, -17.10133, 1, 0.3686275, 0, 1, 0.000212928, 1, 5.234922e-06,
+	    0.8, 2e-05, -21.97, 1, 0.3058824, 0, 1, 0.0002293108, 1, 1.445229e-05,
+	    0.9, 2e-05, -12.91867, 1, 0.4470588, 0, 1, -0.0003194104, 0.9999999, 5.578393e-06,
+	    1, 2e-05, -20.686, 1, 0.3215686, 0, 1, 1.14719e-05, 1, 1.041518e-06,
+	    1.1, 2e-05, -17.95333, 1, 0.3686275, 0, 1, -4.450686e-06, 1, 9.268936e-07,
+	    1.2, 2e-05, -14.934, 1, 0.4156863, 0, 1, 7.834337e-06, 1, 8.458526e-07,
+	    1.3, 2e-05, -21.77867, 1, 0.3058824, 0, 1, 1.900363e-05, 1, 1.098258e-06,
+	    1.4, 2e-05, -25.25133, 1, 0.2470588, 0, 1, -8.792496e-05, 1, 2.036545e-06,
+	    1.5, 2e-05, -19.294, 1, 0.3372549, 0, 1, -8.489282e-06, 1, 2.994458e-06,
+	    1.6, 2e-05, -21.57533, 1, 0.3058824, 0, 1, 6.914941e-05, 1, 2.676542e-06,
+	    1.7, 2e-05, -15.6, 1, 0.4, 0, 1, -6.915424e-05, 1, 1.729445e-06,
+	    1.8, 2e-05, -13.296, 1, 0.4313726, 0, 1, -2.025324e-05, 1, 1.380442e-06,
+	    0.5, 3e-05, -21.54533, 1, 0.3058824, 0, 1, 3.73164e-05, 1, 8.468665e-07,
+	    0.6, 3e-05, -26.392, 1, 0.2313726, 0, 1, 2.023081e-05, 1, 9.811899e-07,
+	    0.7, 3e-05, -25.758, 1, 0.2470588, 0, 1, -0.0001796227, 1, 5.790705e-06,
+	    0.8, 3e-05, -21.598, 1, 0.3058824, 0, 1, -0.0002603816, 1, 1.49731e-05,
+	    0.9, 3e-05, -29.456, 1, 0.1843137, 0, 1, 0.0003629713, 0.9999999, 5.654379e-06,
+	    1, 3e-05, -26.282, 1, 0.2313726, 0, 1, 9.502623e-06, 1, 1.125907e-06,
+	    1.1, 3e-05, -28.68133, 1, 0.2, 0, 1, 1.250418e-05, 1, 1.590097e-06,
+	    1.2, 3e-05, -31.14467, 1, 0.1529412, 0, 1, -1.445652e-07, 1, 2.128292e-06,
+	    1.3, 3e-05, -31.07867, 1, 0.1529412, 0, 1, -1.624338e-05, 1, 2.350388e-06,
+	    1.4, 3e-05, -28.11933, 1, 0.2, 0, 1, -6.475457e-05, 1, 2.906957e-06,
+	    1.5, 3e-05, -20.91933, 1, 0.3215686, 0, 1, -6.703725e-05, 1, 3.034163e-06,
+	    1.6, 3e-05, -24.91867, 1, 0.2627451, 0, 1, 8.328902e-05, 1, 3.099579e-06,
+	    1.7, 3e-05, -36.658, 1, 0.07843138, 0, 1, 8.214467e-05, 1, 4.034514e-06,
+	    1.8, 3e-05, -32.93333, 1, 0.1372549, 0, 1, -3.46618e-05, 1, 4.18225e-06,
+	    0.5, 4e-05, -33.908, 1, 0.1215686, 0, 1, -0.0003302183, 1, 1.411681e-05,
+	    0.6, 4e-05, -33.298, 1, 0.1215686, 0, 1, 5.326062e-05, 1, 9.383895e-06,
+	    0.7, 4e-05, -34.11333, 1, 0.1058824, 0, 1, 5.609553e-06, 1, 2.472595e-06,
+	    0.8, 4e-05, -31.136, 1, 0.1529412, 0, 1, 8.746446e-05, 1, 2.686015e-06,
+	    0.9, 4e-05, -38.754, 1, 0.04705882, 0, 1, 4.434475e-05, 1, 1.225758e-05,
+	    1, 4e-05, -38.06333, 1, 0.04705882, 0, 1, 7.643854e-05, 1, 1.164449e-05,
+	    1.1, 4e-05, -37.58333, 1, 0.0627451, 0, 1, -6.901655e-05, 1, 3.691064e-06,
+	    1.2, 4e-05, -33.01133, 1, 0.1215686, 0, 1, 4.795687e-06, 1, 3.558525e-06,
+	    1.3, 4e-05, -36.21333, 1, 0.07843138, 0, 1, 2.175853e-06, 1, 3.400593e-06,
+	    1.4, 4e-05, -31.15267, 1, 0.1529412, 0, 1, -1.990088e-05, 1, 3.752251e-06,
+	    1.5, 4e-05, -40.39933, 1, 0.01568628, 0, 1, 0.0001282466, 1, 4.833668e-06,
+	    1.6, 4e-05, -33.488, 1, 0.1215686, 0, 1, -4.232129e-05, 1, 3.804156e-06,
+	    1.7, 4e-05, -33.474, 1, 0.1215686, 0, 1, 0.0001595267, 1, 9.93188e-06,
+	    1.8, 4e-05, -35.292, 1, 0.09411765, 0, 1, -0.9996282, 0.0001250604, 0.02726552,
+	    0.5, 5e-05, -34.382, 1, 0.1058824, 0, 1, -0.9957719, -0, 0.09186094,
+	    0.6, 5e-05, -31.24867, 1, 0.1529412, 0, 1, -0.9978776, -0.0004757264, 0.06511559,
+	    0.7, 5e-05, -39.73933, 1, 0.03137255, 0, 1, 0.0001729495, 1, 4.972719e-06,
+	    0.8, 5e-05, -37.75467, 1, 0.0627451, 0, 1, 2.134289e-06, 1, 5.873436e-06,
+	    0.9, 5e-05, -37.31467, 1, 0.0627451, 0, 1, 0.0002062636, -1, 1.023346e-05,
+	    1, 5e-05, -36.08733, 1, 0.07843138, 0, 1, -4.878504e-06, -1, 9.69627e-06,
+	    1.1, 5e-05, -41.88733, 1, 0, 0, 1, -3.883497e-05, 1, 6.846876e-06,
+	    1.2, 5e-05, -35.52, 1, 0.09411765, 0, 1, -1.803299e-05, 1, 3.670756e-06,
+	    1.3, 5e-05, -38.49267, 1, 0.04705882, 0, 1, -5.377569e-07, 1, 3.663951e-06,
+	    1.4, 5e-05, -36.42933, 1, 0.07843138, 0, 1, 4.924497e-05, 1, 6.729603e-06,
+	    1.5, 5e-05, -38.506, 1, 0.04705882, 0, 1, 0.9974412, 0.0006155716, 0.07148917,
+	    1.6, 5e-05, -40.704, 1, 0.01568628, 0, 1, 1.757032e-05, 1, 4.614336e-06,
+	    1.7, 5e-05, -41.982, 1, 0, 0, 1, -0.0001790337, 1, 4.087861e-06,
+	    1.8, 5e-05, -33.03933, 1, 0.1215686, 0, 1, -0.9745421, -0, 0.2242048
+	   ]);
+	   var normLoc471 = gl.getAttribLocation(prog471, "aNorm");
+	   var f=new Uint16Array([
+	    0, 14, 15, 0, 15, 1,
+	    14, 28, 29, 14, 29, 15,
+	    28, 42, 43, 28, 43, 29,
+	    42, 56, 57, 42, 57, 43,
+	    56, 70, 71, 56, 71, 57,
+	    1, 15, 16, 1, 16, 2,
+	    15, 29, 30, 15, 30, 16,
+	    29, 43, 44, 29, 44, 30,
+	    43, 57, 58, 43, 58, 44,
+	    57, 71, 72, 57, 72, 58,
+	    2, 16, 17, 2, 17, 3,
+	    16, 30, 31, 16, 31, 17,
+	    30, 44, 45, 30, 45, 31,
+	    44, 58, 59, 44, 59, 45,
+	    58, 72, 73, 58, 73, 59,
+	    3, 17, 18, 3, 18, 4,
+	    17, 31, 32, 17, 32, 18,
+	    31, 45, 46, 31, 46, 32,
+	    45, 59, 60, 45, 60, 46,
+	    59, 73, 74, 59, 74, 60,
+	    4, 18, 19, 4, 19, 5,
+	    18, 32, 33, 18, 33, 19,
+	    32, 46, 47, 32, 47, 33,
+	    46, 60, 61, 46, 61, 47,
+	    60, 74, 75, 60, 75, 61,
+	    5, 19, 20, 5, 20, 6,
+	    19, 33, 34, 19, 34, 20,
+	    33, 47, 48, 33, 48, 34,
+	    47, 61, 62, 47, 62, 48,
+	    61, 75, 76, 61, 76, 62,
+	    6, 20, 21, 6, 21, 7,
+	    20, 34, 35, 20, 35, 21,
+	    34, 48, 49, 34, 49, 35,
+	    48, 62, 63, 48, 63, 49,
+	    62, 76, 77, 62, 77, 63,
+	    7, 21, 22, 7, 22, 8,
+	    21, 35, 36, 21, 36, 22,
+	    35, 49, 50, 35, 50, 36,
+	    49, 63, 64, 49, 64, 50,
+	    63, 77, 78, 63, 78, 64,
+	    8, 22, 23, 8, 23, 9,
+	    22, 36, 37, 22, 37, 23,
+	    36, 50, 51, 36, 51, 37,
+	    50, 64, 65, 50, 65, 51,
+	    64, 78, 79, 64, 79, 65,
+	    9, 23, 24, 9, 24, 10,
+	    23, 37, 38, 23, 38, 24,
+	    37, 51, 52, 37, 52, 38,
+	    51, 65, 66, 51, 66, 52,
+	    65, 79, 80, 65, 80, 66,
+	    10, 24, 25, 10, 25, 11,
+	    24, 38, 39, 24, 39, 25,
+	    38, 52, 53, 38, 53, 39,
+	    52, 66, 67, 52, 67, 53,
+	    66, 80, 81, 66, 81, 67,
+	    11, 25, 26, 11, 26, 12,
+	    25, 39, 40, 25, 40, 26,
+	    39, 53, 54, 39, 54, 40,
+	    53, 67, 68, 53, 68, 54,
+	    67, 81, 82, 67, 82, 68,
+	    12, 26, 27, 12, 27, 13,
+	    26, 40, 41, 26, 41, 27,
+	    40, 54, 55, 40, 55, 41,
+	    54, 68, 69, 54, 69, 55,
+	    68, 82, 83, 68, 83, 69
+	   ]);
+	   var buf471 = gl.createBuffer();
+	   gl.bindBuffer(gl.ARRAY_BUFFER, buf471);
+	   gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	   var ibuf471 = gl.createBuffer();
+	   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibuf471);
+	   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, f, gl.STATIC_DRAW);
+	   var mvMatLoc471 = gl.getUniformLocation(prog471,"mvMatrix");
+	   var prMatLoc471 = gl.getUniformLocation(prog471,"prMatrix");
+	   var normMatLoc471 = gl.getUniformLocation(prog471,"normMatrix");
+
+
+	   // ****** lines object 472 ******
+	   var prog472  = gl.createProgram();
+	   gl.attachShader(prog472, getShader( gl, "vshader472" ));
+	   gl.attachShader(prog472, getShader( gl, "fshader472" ));
+	   //  Force aPos to location 0, aCol to location 1 
+	   gl.bindAttribLocation(prog472, 0, "aPos");
+	   gl.bindAttribLocation(prog472, 1, "aCol");
+	   gl.linkProgram(prog472);
+	   var v=new Float32Array([
+	    0.5, 0, -41.982,
+	    0.5, 0, -41.982,
+	    1.8, 5e-05, 45.18667,
+	    1.8, 5e-05, 45.18667
+	   ]);
+	   var buf472 = gl.createBuffer();
+	   gl.bindBuffer(gl.ARRAY_BUFFER, buf472);
+	   gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	   var mvMatLoc472 = gl.getUniformLocation(prog472,"mvMatrix");
+	   var prMatLoc472 = gl.getUniformLocation(prog472,"prMatrix");
+
+
+	   // ****** text object 474 ******
+	   var prog474  = gl.createProgram();
+	   gl.attachShader(prog474, getShader( gl, "vshader474" ));
+	   gl.attachShader(prog474, getShader( gl, "fshader474" ));
+	   //  Force aPos to location 0, aCol to location 1 
+	   gl.bindAttribLocation(prog474, 0, "aPos");
+	   gl.bindAttribLocation(prog474, 1, "aCol");
+	   gl.linkProgram(prog474);
+	   var texts = [
+	    "alpha_l"
+	   ];
+	   var texinfo = drawTextToCanvas(texts, 1);	 
+	   var canvasX474 = texinfo.canvasX;
+	   var canvasY474 = texinfo.canvasY;
+	   var ofsLoc474 = gl.getAttribLocation(prog474, "aOfs");
+	   var texture474 = gl.createTexture();
+	   var texLoc474 = gl.getAttribLocation(prog474, "aTexcoord");
+	   var sampler474 = gl.getUniformLocation(prog474,"uSampler");
+    	   handleLoadedTexture(texture474, document.getElementById("textureCanvas"));
+	   var v=new Float32Array([
+	    1.15, -8.475e-06, -56.75709, 0, -0.5, 0.5, 0.5,
+	    1.15, -8.475e-06, -56.75709, 1, -0.5, 0.5, 0.5,
+	    1.15, -8.475e-06, -56.75709, 1, 1.5, 0.5, 0.5,
+	    1.15, -8.475e-06, -56.75709, 0, 1.5, 0.5, 0.5
+	   ]);
+	   for (var i=0; i<1; i++) 
+	     for (var j=0; j<4; j++) {
+	         ind = 7*(4*i + j) + 3;
+	         v[ind+2] = 2*(v[ind]-v[ind+2])*texinfo.widths[i];
+	         v[ind+3] = 2*(v[ind+1]-v[ind+3])*texinfo.textHeight;
+	         v[ind] *= texinfo.widths[i]/texinfo.canvasX;
+	         v[ind+1] = 1.0-(texinfo.offset + i*texinfo.skip 
+	           - v[ind+1]*texinfo.textHeight)/texinfo.canvasY;
+	     }
+	   var f=new Uint16Array([
+	    0, 1, 2, 0, 2, 3
+	   ]);
+	   var buf474 = gl.createBuffer();
+	   gl.bindBuffer(gl.ARRAY_BUFFER, buf474);
+	   gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	   var ibuf474 = gl.createBuffer();
+	   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibuf474);
+	   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, f, gl.STATIC_DRAW);
+	   var mvMatLoc474 = gl.getUniformLocation(prog474,"mvMatrix");
+	   var prMatLoc474 = gl.getUniformLocation(prog474,"prMatrix");
+	   var textScaleLoc474 = gl.getUniformLocation(prog474,"textScale");
+
+
+	   // ****** text object 475 ******
+	   var prog475  = gl.createProgram();
+	   gl.attachShader(prog475, getShader( gl, "vshader475" ));
+	   gl.attachShader(prog475, getShader( gl, "fshader475" ));
+	   //  Force aPos to location 0, aCol to location 1 
+	   gl.bindAttribLocation(prog475, 0, "aPos");
+	   gl.bindAttribLocation(prog475, 1, "aCol");
+	   gl.linkProgram(prog475);
+	   var texts = [
+	    "alpha_u"
+	   ];
+	   var texinfo = drawTextToCanvas(texts, 1);	 
+	   var canvasX475 = texinfo.canvasX;
+	   var canvasY475 = texinfo.canvasY;
+	   var ofsLoc475 = gl.getAttribLocation(prog475, "aOfs");
+	   var texture475 = gl.createTexture();
+	   var texLoc475 = gl.getAttribLocation(prog475, "aTexcoord");
+	   var sampler475 = gl.getUniformLocation(prog475,"uSampler");
+    	   handleLoadedTexture(texture475, document.getElementById("textureCanvas"));
+	   var v=new Float32Array([
+	    0.27965, 2.5e-05, -56.75709, 0, -0.5, 0.5, 0.5,
+	    0.27965, 2.5e-05, -56.75709, 1, -0.5, 0.5, 0.5,
+	    0.27965, 2.5e-05, -56.75709, 1, 1.5, 0.5, 0.5,
+	    0.27965, 2.5e-05, -56.75709, 0, 1.5, 0.5, 0.5
+	   ]);
+	   for (var i=0; i<1; i++) 
+	     for (var j=0; j<4; j++) {
+	         ind = 7*(4*i + j) + 3;
+	         v[ind+2] = 2*(v[ind]-v[ind+2])*texinfo.widths[i];
+	         v[ind+3] = 2*(v[ind+1]-v[ind+3])*texinfo.textHeight;
+	         v[ind] *= texinfo.widths[i]/texinfo.canvasX;
+	         v[ind+1] = 1.0-(texinfo.offset + i*texinfo.skip 
+	           - v[ind+1]*texinfo.textHeight)/texinfo.canvasY;
+	     }
+	   var f=new Uint16Array([
+	    0, 1, 2, 0, 2, 3
+	   ]);
+	   var buf475 = gl.createBuffer();
+	   gl.bindBuffer(gl.ARRAY_BUFFER, buf475);
+	   gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	   var ibuf475 = gl.createBuffer();
+	   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibuf475);
+	   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, f, gl.STATIC_DRAW);
+	   var mvMatLoc475 = gl.getUniformLocation(prog475,"mvMatrix");
+	   var prMatLoc475 = gl.getUniformLocation(prog475,"prMatrix");
+	   var textScaleLoc475 = gl.getUniformLocation(prog475,"textScale");
+
+
+	   // ****** text object 476 ******
+	   var prog476  = gl.createProgram();
+	   gl.attachShader(prog476, getShader( gl, "vshader476" ));
+	   gl.attachShader(prog476, getShader( gl, "fshader476" ));
+	   //  Force aPos to location 0, aCol to location 1 
+	   gl.bindAttribLocation(prog476, 0, "aPos");
+	   gl.bindAttribLocation(prog476, 1, "aCol");
+	   gl.linkProgram(prog476);
+	   var texts = [
+	    "Mae Castiglione della Pescaia"
+	   ];
+	   var texinfo = drawTextToCanvas(texts, 1);	 
+	   var canvasX476 = texinfo.canvasX;
+	   var canvasY476 = texinfo.canvasY;
+	   var ofsLoc476 = gl.getAttribLocation(prog476, "aOfs");
+	   var texture476 = gl.createTexture();
+	   var texLoc476 = gl.getAttribLocation(prog476, "aTexcoord");
+	   var sampler476 = gl.getUniformLocation(prog476,"uSampler");
+    	   handleLoadedTexture(texture476, document.getElementById("textureCanvas"));
+	   var v=new Float32Array([
+	    0.27965, -8.475e-06, 1.602335, 0, -0.5, 0.5, 0.5,
+	    0.27965, -8.475e-06, 1.602335, 1, -0.5, 0.5, 0.5,
+	    0.27965, -8.475e-06, 1.602335, 1, 1.5, 0.5, 0.5,
+	    0.27965, -8.475e-06, 1.602335, 0, 1.5, 0.5, 0.5
+	   ]);
+	   for (var i=0; i<1; i++) 
+	     for (var j=0; j<4; j++) {
+	         ind = 7*(4*i + j) + 3;
+	         v[ind+2] = 2*(v[ind]-v[ind+2])*texinfo.widths[i];
+	         v[ind+3] = 2*(v[ind+1]-v[ind+3])*texinfo.textHeight;
+	         v[ind] *= texinfo.widths[i]/texinfo.canvasX;
+	         v[ind+1] = 1.0-(texinfo.offset + i*texinfo.skip 
+	           - v[ind+1]*texinfo.textHeight)/texinfo.canvasY;
+	     }
+	   var f=new Uint16Array([
+	    0, 1, 2, 0, 2, 3
+	   ]);
+	   var buf476 = gl.createBuffer();
+	   gl.bindBuffer(gl.ARRAY_BUFFER, buf476);
+	   gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	   var ibuf476 = gl.createBuffer();
+	   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibuf476);
+	   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, f, gl.STATIC_DRAW);
+	   var mvMatLoc476 = gl.getUniformLocation(prog476,"mvMatrix");
+	   var prMatLoc476 = gl.getUniformLocation(prog476,"prMatrix");
+	   var textScaleLoc476 = gl.getUniformLocation(prog476,"textScale");
+
+
+	   // ****** lines object 477 ******
+	   var prog477  = gl.createProgram();
+	   gl.attachShader(prog477, getShader( gl, "vshader477" ));
+	   gl.attachShader(prog477, getShader( gl, "fshader477" ));
+	   //  Force aPos to location 0, aCol to location 1 
+	   gl.bindAttribLocation(prog477, 0, "aPos");
+	   gl.bindAttribLocation(prog477, 1, "aCol");
+	   gl.linkProgram(prog477);
+	   var v=new Float32Array([
+	    0.6, -7.5e-07, -43.28953,
+	    1.6, -7.5e-07, -43.28953,
+	    0.6, -7.5e-07, -43.28953,
+	    0.6, -2.0375e-06, -45.53412,
+	    0.8, -7.5e-07, -43.28953,
+	    0.8, -2.0375e-06, -45.53412,
+	    1, -7.5e-07, -43.28953,
+	    1, -2.0375e-06, -45.53412,
+	    1.2, -7.5e-07, -43.28953,
+	    1.2, -2.0375e-06, -45.53412,
+	    1.4, -7.5e-07, -43.28953,
+	    1.4, -2.0375e-06, -45.53412,
+	    1.6, -7.5e-07, -43.28953,
+	    1.6, -2.0375e-06, -45.53412
+	   ]);
+	   var buf477 = gl.createBuffer();
+	   gl.bindBuffer(gl.ARRAY_BUFFER, buf477);
+	   gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	   var mvMatLoc477 = gl.getUniformLocation(prog477,"mvMatrix");
+	   var prMatLoc477 = gl.getUniformLocation(prog477,"prMatrix");
+
+
+	   // ****** text object 478 ******
+	   var prog478  = gl.createProgram();
+	   gl.attachShader(prog478, getShader( gl, "vshader478" ));
+	   gl.attachShader(prog478, getShader( gl, "fshader478" ));
+	   //  Force aPos to location 0, aCol to location 1 
+	   gl.bindAttribLocation(prog478, 0, "aPos");
+	   gl.bindAttribLocation(prog478, 1, "aCol");
+	   gl.linkProgram(prog478);
+	   var texts = [
+	    "0.6",
+	    "0.8",
+	    "1",
+	    "1.2",
+	    "1.4",
+	    "1.6"
+	   ];
+	   var texinfo = drawTextToCanvas(texts, 1);	 
+	   var canvasX478 = texinfo.canvasX;
+	   var canvasY478 = texinfo.canvasY;
+	   var ofsLoc478 = gl.getAttribLocation(prog478, "aOfs");
+	   var texture478 = gl.createTexture();
+	   var texLoc478 = gl.getAttribLocation(prog478, "aTexcoord");
+	   var sampler478 = gl.getUniformLocation(prog478,"uSampler");
+    	   handleLoadedTexture(texture478, document.getElementById("textureCanvas"));
+	   var v=new Float32Array([
+	    0.6, -4.6125e-06, -50.02331, 0, -0.5, 0.5, 0.5,
+	    0.6, -4.6125e-06, -50.02331, 1, -0.5, 0.5, 0.5,
+	    0.6, -4.6125e-06, -50.02331, 1, 1.5, 0.5, 0.5,
+	    0.6, -4.6125e-06, -50.02331, 0, 1.5, 0.5, 0.5,
+	    0.8, -4.6125e-06, -50.02331, 0, -0.5, 0.5, 0.5,
+	    0.8, -4.6125e-06, -50.02331, 1, -0.5, 0.5, 0.5,
+	    0.8, -4.6125e-06, -50.02331, 1, 1.5, 0.5, 0.5,
+	    0.8, -4.6125e-06, -50.02331, 0, 1.5, 0.5, 0.5,
+	    1, -4.6125e-06, -50.02331, 0, -0.5, 0.5, 0.5,
+	    1, -4.6125e-06, -50.02331, 1, -0.5, 0.5, 0.5,
+	    1, -4.6125e-06, -50.02331, 1, 1.5, 0.5, 0.5,
+	    1, -4.6125e-06, -50.02331, 0, 1.5, 0.5, 0.5,
+	    1.2, -4.6125e-06, -50.02331, 0, -0.5, 0.5, 0.5,
+	    1.2, -4.6125e-06, -50.02331, 1, -0.5, 0.5, 0.5,
+	    1.2, -4.6125e-06, -50.02331, 1, 1.5, 0.5, 0.5,
+	    1.2, -4.6125e-06, -50.02331, 0, 1.5, 0.5, 0.5,
+	    1.4, -4.6125e-06, -50.02331, 0, -0.5, 0.5, 0.5,
+	    1.4, -4.6125e-06, -50.02331, 1, -0.5, 0.5, 0.5,
+	    1.4, -4.6125e-06, -50.02331, 1, 1.5, 0.5, 0.5,
+	    1.4, -4.6125e-06, -50.02331, 0, 1.5, 0.5, 0.5,
+	    1.6, -4.6125e-06, -50.02331, 0, -0.5, 0.5, 0.5,
+	    1.6, -4.6125e-06, -50.02331, 1, -0.5, 0.5, 0.5,
+	    1.6, -4.6125e-06, -50.02331, 1, 1.5, 0.5, 0.5,
+	    1.6, -4.6125e-06, -50.02331, 0, 1.5, 0.5, 0.5
+	   ]);
+	   for (var i=0; i<6; i++) 
+	     for (var j=0; j<4; j++) {
+	         ind = 7*(4*i + j) + 3;
+	         v[ind+2] = 2*(v[ind]-v[ind+2])*texinfo.widths[i];
+	         v[ind+3] = 2*(v[ind+1]-v[ind+3])*texinfo.textHeight;
+	         v[ind] *= texinfo.widths[i]/texinfo.canvasX;
+	         v[ind+1] = 1.0-(texinfo.offset + i*texinfo.skip 
+	           - v[ind+1]*texinfo.textHeight)/texinfo.canvasY;
+	     }
+	   var f=new Uint16Array([
+	    0, 1, 2, 0, 2, 3,
+	    4, 5, 6, 4, 6, 7,
+	    8, 9, 10, 8, 10, 11,
+	    12, 13, 14, 12, 14, 15,
+	    16, 17, 18, 16, 18, 19,
+	    20, 21, 22, 20, 22, 23
+	   ]);
+	   var buf478 = gl.createBuffer();
+	   gl.bindBuffer(gl.ARRAY_BUFFER, buf478);
+	   gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	   var ibuf478 = gl.createBuffer();
+	   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibuf478);
+	   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, f, gl.STATIC_DRAW);
+	   var mvMatLoc478 = gl.getUniformLocation(prog478,"mvMatrix");
+	   var prMatLoc478 = gl.getUniformLocation(prog478,"prMatrix");
+	   var textScaleLoc478 = gl.getUniformLocation(prog478,"textScale");
+
+
+	   // ****** lines object 479 ******
+	   var prog479  = gl.createProgram();
+	   gl.attachShader(prog479, getShader( gl, "vshader479" ));
+	   gl.attachShader(prog479, getShader( gl, "fshader479" ));
+	   //  Force aPos to location 0, aCol to location 1 
+	   gl.bindAttribLocation(prog479, 0, "aPos");
+	   gl.bindAttribLocation(prog479, 1, "aCol");
+	   gl.linkProgram(prog479);
+	   var v=new Float32Array([
+	    0.4805, 0, -43.28953,
+	    0.4805, 5e-05, -43.28953,
+	    0.4805, 0, -43.28953,
+	    0.447025, 0, -45.53412,
+	    0.4805, 1e-05, -43.28953,
+	    0.447025, 1e-05, -45.53412,
+	    0.4805, 2e-05, -43.28953,
+	    0.447025, 2e-05, -45.53412,
+	    0.4805, 3e-05, -43.28953,
+	    0.447025, 3e-05, -45.53412,
+	    0.4805, 4e-05, -43.28953,
+	    0.447025, 4e-05, -45.53412,
+	    0.4805, 5e-05, -43.28953,
+	    0.447025, 5e-05, -45.53412
+	   ]);
+	   var buf479 = gl.createBuffer();
+	   gl.bindBuffer(gl.ARRAY_BUFFER, buf479);
+	   gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	   var mvMatLoc479 = gl.getUniformLocation(prog479,"mvMatrix");
+	   var prMatLoc479 = gl.getUniformLocation(prog479,"prMatrix");
+
+
+	   // ****** text object 480 ******
+	   var prog480  = gl.createProgram();
+	   gl.attachShader(prog480, getShader( gl, "vshader480" ));
+	   gl.attachShader(prog480, getShader( gl, "fshader480" ));
+	   //  Force aPos to location 0, aCol to location 1 
+	   gl.bindAttribLocation(prog480, 0, "aPos");
+	   gl.bindAttribLocation(prog480, 1, "aCol");
+	   gl.linkProgram(prog480);
+	   var texts = [
+	    "0",
+	    "1e-05",
+	    "2e-05",
+	    "3e-05",
+	    "4e-05",
+	    "5e-05"
+	   ];
+	   var texinfo = drawTextToCanvas(texts, 1);	 
+	   var canvasX480 = texinfo.canvasX;
+	   var canvasY480 = texinfo.canvasY;
+	   var ofsLoc480 = gl.getAttribLocation(prog480, "aOfs");
+	   var texture480 = gl.createTexture();
+	   var texLoc480 = gl.getAttribLocation(prog480, "aTexcoord");
+	   var sampler480 = gl.getUniformLocation(prog480,"uSampler");
+    	   handleLoadedTexture(texture480, document.getElementById("textureCanvas"));
+	   var v=new Float32Array([
+	    0.380075, 0, -50.02331, 0, -0.5, 0.5, 0.5,
+	    0.380075, 0, -50.02331, 1, -0.5, 0.5, 0.5,
+	    0.380075, 0, -50.02331, 1, 1.5, 0.5, 0.5,
+	    0.380075, 0, -50.02331, 0, 1.5, 0.5, 0.5,
+	    0.380075, 1e-05, -50.02331, 0, -0.5, 0.5, 0.5,
+	    0.380075, 1e-05, -50.02331, 1, -0.5, 0.5, 0.5,
+	    0.380075, 1e-05, -50.02331, 1, 1.5, 0.5, 0.5,
+	    0.380075, 1e-05, -50.02331, 0, 1.5, 0.5, 0.5,
+	    0.380075, 2e-05, -50.02331, 0, -0.5, 0.5, 0.5,
+	    0.380075, 2e-05, -50.02331, 1, -0.5, 0.5, 0.5,
+	    0.380075, 2e-05, -50.02331, 1, 1.5, 0.5, 0.5,
+	    0.380075, 2e-05, -50.02331, 0, 1.5, 0.5, 0.5,
+	    0.380075, 3e-05, -50.02331, 0, -0.5, 0.5, 0.5,
+	    0.380075, 3e-05, -50.02331, 1, -0.5, 0.5, 0.5,
+	    0.380075, 3e-05, -50.02331, 1, 1.5, 0.5, 0.5,
+	    0.380075, 3e-05, -50.02331, 0, 1.5, 0.5, 0.5,
+	    0.380075, 4e-05, -50.02331, 0, -0.5, 0.5, 0.5,
+	    0.380075, 4e-05, -50.02331, 1, -0.5, 0.5, 0.5,
+	    0.380075, 4e-05, -50.02331, 1, 1.5, 0.5, 0.5,
+	    0.380075, 4e-05, -50.02331, 0, 1.5, 0.5, 0.5,
+	    0.380075, 5e-05, -50.02331, 0, -0.5, 0.5, 0.5,
+	    0.380075, 5e-05, -50.02331, 1, -0.5, 0.5, 0.5,
+	    0.380075, 5e-05, -50.02331, 1, 1.5, 0.5, 0.5,
+	    0.380075, 5e-05, -50.02331, 0, 1.5, 0.5, 0.5
+	   ]);
+	   for (var i=0; i<6; i++) 
+	     for (var j=0; j<4; j++) {
+	         ind = 7*(4*i + j) + 3;
+	         v[ind+2] = 2*(v[ind]-v[ind+2])*texinfo.widths[i];
+	         v[ind+3] = 2*(v[ind+1]-v[ind+3])*texinfo.textHeight;
+	         v[ind] *= texinfo.widths[i]/texinfo.canvasX;
+	         v[ind+1] = 1.0-(texinfo.offset + i*texinfo.skip 
+	           - v[ind+1]*texinfo.textHeight)/texinfo.canvasY;
+	     }
+	   var f=new Uint16Array([
+	    0, 1, 2, 0, 2, 3,
+	    4, 5, 6, 4, 6, 7,
+	    8, 9, 10, 8, 10, 11,
+	    12, 13, 14, 12, 14, 15,
+	    16, 17, 18, 16, 18, 19,
+	    20, 21, 22, 20, 22, 23
+	   ]);
+	   var buf480 = gl.createBuffer();
+	   gl.bindBuffer(gl.ARRAY_BUFFER, buf480);
+	   gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	   var ibuf480 = gl.createBuffer();
+	   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibuf480);
+	   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, f, gl.STATIC_DRAW);
+	   var mvMatLoc480 = gl.getUniformLocation(prog480,"mvMatrix");
+	   var prMatLoc480 = gl.getUniformLocation(prog480,"prMatrix");
+	   var textScaleLoc480 = gl.getUniformLocation(prog480,"textScale");
+
+
+	   // ****** lines object 481 ******
+	   var prog481  = gl.createProgram();
+	   gl.attachShader(prog481, getShader( gl, "vshader481" ));
+	   gl.attachShader(prog481, getShader( gl, "fshader481" ));
+	   //  Force aPos to location 0, aCol to location 1 
+	   gl.bindAttribLocation(prog481, 0, "aPos");
+	   gl.bindAttribLocation(prog481, 1, "aCol");
+	   gl.linkProgram(prog481);
+	   var v=new Float32Array([
+	    0.4805, -7.5e-07, -40,
+	    0.4805, -7.5e-07, 40,
+	    0.4805, -7.5e-07, -40,
+	    0.447025, -2.0375e-06, -40,
+	    0.4805, -7.5e-07, -20,
+	    0.447025, -2.0375e-06, -20,
+	    0.4805, -7.5e-07, 0,
+	    0.447025, -2.0375e-06, 0,
+	    0.4805, -7.5e-07, 20,
+	    0.447025, -2.0375e-06, 20,
+	    0.4805, -7.5e-07, 40,
+	    0.447025, -2.0375e-06, 40
+	   ]);
+	   var buf481 = gl.createBuffer();
+	   gl.bindBuffer(gl.ARRAY_BUFFER, buf481);
+	   gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	   var mvMatLoc481 = gl.getUniformLocation(prog481,"mvMatrix");
+	   var prMatLoc481 = gl.getUniformLocation(prog481,"prMatrix");
+
+
+	   // ****** text object 482 ******
+	   var prog482  = gl.createProgram();
+	   gl.attachShader(prog482, getShader( gl, "vshader482" ));
+	   gl.attachShader(prog482, getShader( gl, "fshader482" ));
+	   //  Force aPos to location 0, aCol to location 1 
+	   gl.bindAttribLocation(prog482, 0, "aPos");
+	   gl.bindAttribLocation(prog482, 1, "aCol");
+	   gl.linkProgram(prog482);
+	   var texts = [
+	    "-40",
+	    "-20",
+	    "0",
+	    "20",
+	    "40"
+	   ];
+	   var texinfo = drawTextToCanvas(texts, 1);	 
+	   var canvasX482 = texinfo.canvasX;
+	   var canvasY482 = texinfo.canvasY;
+	   var ofsLoc482 = gl.getAttribLocation(prog482, "aOfs");
+	   var texture482 = gl.createTexture();
+	   var texLoc482 = gl.getAttribLocation(prog482, "aTexcoord");
+	   var sampler482 = gl.getUniformLocation(prog482,"uSampler");
+    	   handleLoadedTexture(texture482, document.getElementById("textureCanvas"));
+	   var v=new Float32Array([
+	    0.380075, -4.6125e-06, -40, 0, -0.5, 0.5, 0.5,
+	    0.380075, -4.6125e-06, -40, 1, -0.5, 0.5, 0.5,
+	    0.380075, -4.6125e-06, -40, 1, 1.5, 0.5, 0.5,
+	    0.380075, -4.6125e-06, -40, 0, 1.5, 0.5, 0.5,
+	    0.380075, -4.6125e-06, -20, 0, -0.5, 0.5, 0.5,
+	    0.380075, -4.6125e-06, -20, 1, -0.5, 0.5, 0.5,
+	    0.380075, -4.6125e-06, -20, 1, 1.5, 0.5, 0.5,
+	    0.380075, -4.6125e-06, -20, 0, 1.5, 0.5, 0.5,
+	    0.380075, -4.6125e-06, 0, 0, -0.5, 0.5, 0.5,
+	    0.380075, -4.6125e-06, 0, 1, -0.5, 0.5, 0.5,
+	    0.380075, -4.6125e-06, 0, 1, 1.5, 0.5, 0.5,
+	    0.380075, -4.6125e-06, 0, 0, 1.5, 0.5, 0.5,
+	    0.380075, -4.6125e-06, 20, 0, -0.5, 0.5, 0.5,
+	    0.380075, -4.6125e-06, 20, 1, -0.5, 0.5, 0.5,
+	    0.380075, -4.6125e-06, 20, 1, 1.5, 0.5, 0.5,
+	    0.380075, -4.6125e-06, 20, 0, 1.5, 0.5, 0.5,
+	    0.380075, -4.6125e-06, 40, 0, -0.5, 0.5, 0.5,
+	    0.380075, -4.6125e-06, 40, 1, -0.5, 0.5, 0.5,
+	    0.380075, -4.6125e-06, 40, 1, 1.5, 0.5, 0.5,
+	    0.380075, -4.6125e-06, 40, 0, 1.5, 0.5, 0.5
+	   ]);
+	   for (var i=0; i<5; i++) 
+	     for (var j=0; j<4; j++) {
+	         ind = 7*(4*i + j) + 3;
+	         v[ind+2] = 2*(v[ind]-v[ind+2])*texinfo.widths[i];
+	         v[ind+3] = 2*(v[ind+1]-v[ind+3])*texinfo.textHeight;
+	         v[ind] *= texinfo.widths[i]/texinfo.canvasX;
+	         v[ind+1] = 1.0-(texinfo.offset + i*texinfo.skip 
+	           - v[ind+1]*texinfo.textHeight)/texinfo.canvasY;
+	     }
+	   var f=new Uint16Array([
+	    0, 1, 2, 0, 2, 3,
+	    4, 5, 6, 4, 6, 7,
+	    8, 9, 10, 8, 10, 11,
+	    12, 13, 14, 12, 14, 15,
+	    16, 17, 18, 16, 18, 19
+	   ]);
+	   var buf482 = gl.createBuffer();
+	   gl.bindBuffer(gl.ARRAY_BUFFER, buf482);
+	   gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	   var ibuf482 = gl.createBuffer();
+	   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibuf482);
+	   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, f, gl.STATIC_DRAW);
+	   var mvMatLoc482 = gl.getUniformLocation(prog482,"mvMatrix");
+	   var prMatLoc482 = gl.getUniformLocation(prog482,"prMatrix");
+	   var textScaleLoc482 = gl.getUniformLocation(prog482,"textScale");
+
+
+	   // ****** lines object 483 ******
+	   var prog483  = gl.createProgram();
+	   gl.attachShader(prog483, getShader( gl, "vshader483" ));
+	   gl.attachShader(prog483, getShader( gl, "fshader483" ));
+	   //  Force aPos to location 0, aCol to location 1 
+	   gl.bindAttribLocation(prog483, 0, "aPos");
+	   gl.bindAttribLocation(prog483, 1, "aCol");
+	   gl.linkProgram(prog483);
+	   var v=new Float32Array([
+	    0.4805, -7.5e-07, -43.28953,
+	    0.4805, 5.075e-05, -43.28953,
+	    0.4805, -7.5e-07, 46.4942,
+	    0.4805, 5.075e-05, 46.4942,
+	    0.4805, -7.5e-07, -43.28953,
+	    0.4805, -7.5e-07, 46.4942,
+	    0.4805, 5.075e-05, -43.28953,
+	    0.4805, 5.075e-05, 46.4942,
+	    0.4805, -7.5e-07, -43.28953,
+	    1.8195, -7.5e-07, -43.28953,
+	    0.4805, -7.5e-07, 46.4942,
+	    1.8195, -7.5e-07, 46.4942,
+	    0.4805, 5.075e-05, -43.28953,
+	    1.8195, 5.075e-05, -43.28953,
+	    0.4805, 5.075e-05, 46.4942,
+	    1.8195, 5.075e-05, 46.4942,
+	    1.8195, -7.5e-07, -43.28953,
+	    1.8195, 5.075e-05, -43.28953,
+	    1.8195, -7.5e-07, 46.4942,
+	    1.8195, 5.075e-05, 46.4942,
+	    1.8195, -7.5e-07, -43.28953,
+	    1.8195, -7.5e-07, 46.4942,
+	    1.8195, 5.075e-05, -43.28953,
+	    1.8195, 5.075e-05, 46.4942
+	   ]);
+	   var buf483 = gl.createBuffer();
+	   gl.bindBuffer(gl.ARRAY_BUFFER, buf483);
+	   gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW);
+	   var mvMatLoc483 = gl.getUniformLocation(prog483,"mvMatrix");
+	   var prMatLoc483 = gl.getUniformLocation(prog483,"prMatrix");
+
+	   gl.enable(gl.DEPTH_TEST);
+	   gl.depthFunc(gl.LEQUAL);
+	   gl.clearDepth(1.0);
+	   gl.clearColor(1,1,1,1);
+	   var xOffs = yOffs = 0,  drag  = 0;
+	   
+           function multMV(M, v) {
+	     return [M.m11*v[0] + M.m12*v[1] + M.m13*v[2] + M.m14*v[3],
+		     M.m21*v[0] + M.m22*v[1] + M.m23*v[2] + M.m24*v[3],
+		     M.m31*v[0] + M.m32*v[1] + M.m33*v[2] + M.m34*v[3],
+		     M.m41*v[0] + M.m42*v[1] + M.m43*v[2] + M.m44*v[3]];
+	   }
+	   	   
+	   drawScene();
+
+	   function drawScene(){
+	     gl.depthMask(true);
+	     gl.disable(gl.BLEND);
+	     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+
+	     // ***** subscene 415 ****
+
+	     gl.viewport(0, 0, 256, 256);
+	     gl.scissor(0, 0, 256, 256);
+
+	     gl.clearColor(1, 1, 1, 1);
+	     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+	     var radius = 41.52427;
+	     var distance = 184.7462;
+	     var t = tan(fov[415]*PI/360);
+	     var near = distance - radius;
+	     var far = distance + radius;
+	     var hlen = t*near;
+	     var aspect = 1;
+	     prMatrix.makeIdentity();
+	     if (aspect > 1)
+	       prMatrix.frustum(-hlen*aspect*zoom[415], hlen*aspect*zoom[415], 
+	                        -hlen*zoom[415], hlen*zoom[415], near, far);
+	     else  
+	       prMatrix.frustum(-hlen*zoom[415], hlen*zoom[415], 
+	                        -hlen*zoom[415]/aspect, hlen*zoom[415]/aspect, 
+	                        near, far);
+
+         mvMatrix.makeIdentity();
+	     mvMatrix.translate( -1.15, -2.5e-05, -1.602335 );
+	     mvMatrix.scale( 38.71727, 1006649, 0.2887072 );   
+	     mvMatrix.multRight( userMatrix[415] );
+         mvMatrix.translate(-0, -0, -184.7462);
+
+         normMatrix.makeIdentity();
+	     normMatrix.scale( 0.02582827, 9.933949e-07, 3.463717 );   
+	     normMatrix.multRight( userMatrix[415] );
+
+	     // ****** surface object 471 *******
+	     gl.useProgram(prog471);
+	     gl.bindBuffer(gl.ARRAY_BUFFER, buf471);
+	     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibuf471);
+	     gl.uniformMatrix4fv( prMatLoc471, false, new Float32Array(prMatrix.getAsArray()) );
+	     gl.uniformMatrix4fv( mvMatLoc471, false, new Float32Array(mvMatrix.getAsArray()) );
+	     gl.uniformMatrix4fv( normMatLoc471, false, new Float32Array(normMatrix.getAsArray()) );
+	     gl.enableVertexAttribArray( posLoc );
+	     gl.enableVertexAttribArray( colLoc );
+	     gl.vertexAttribPointer(colLoc, 4, gl.FLOAT, false, 40, 12);
+	     gl.enableVertexAttribArray( normLoc471 );
+	     gl.vertexAttribPointer(normLoc471, 3, gl.FLOAT, false, 40, 28);
+	     gl.vertexAttribPointer(posLoc,  3, gl.FLOAT, false, 40,  0);
+	     gl.drawElements(gl.TRIANGLES, 390, gl.UNSIGNED_SHORT, 0);
+
+	     // ****** lines object 472 *******
+	     gl.useProgram(prog472);
+	     gl.bindBuffer(gl.ARRAY_BUFFER, buf472);
+	     gl.uniformMatrix4fv( prMatLoc472, false, new Float32Array(prMatrix.getAsArray()) );
+	     gl.uniformMatrix4fv( mvMatLoc472, false, new Float32Array(mvMatrix.getAsArray()) );
+	     gl.enableVertexAttribArray( posLoc );
+	     gl.disableVertexAttribArray( colLoc );
+	     gl.vertexAttrib4f( colLoc, 0, 0, 0, 1 );
+	     gl.lineWidth( 1 );
+	     gl.vertexAttribPointer(posLoc,  3, gl.FLOAT, false, 12,  0);
+	     gl.drawArrays(gl.LINES, 0, 4);
+
+	     // ****** text object 474 *******
+	     gl.useProgram(prog474);
+	     gl.bindBuffer(gl.ARRAY_BUFFER, buf474);
+	     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibuf474);
+	     gl.uniformMatrix4fv( prMatLoc474, false, new Float32Array(prMatrix.getAsArray()) );
+	     gl.uniformMatrix4fv( mvMatLoc474, false, new Float32Array(mvMatrix.getAsArray()) );
+	     gl.uniform2f( textScaleLoc474, 0.002929688, 0.002929688);
+	     gl.enableVertexAttribArray( posLoc );
+	     gl.disableVertexAttribArray( colLoc );
+	     gl.vertexAttrib4f( colLoc, 0, 0, 0, 1 );
+	     gl.enableVertexAttribArray( texLoc474 );
+	     gl.vertexAttribPointer(texLoc474, 2, gl.FLOAT, false, 28, 12);
+	     gl.activeTexture(gl.TEXTURE0);
+	     gl.bindTexture(gl.TEXTURE_2D, texture474);
+	     gl.uniform1i( sampler474, 0);
+	     gl.enableVertexAttribArray( ofsLoc474 );
+	     gl.vertexAttribPointer(ofsLoc474, 2, gl.FLOAT, false, 28, 20);
+	     gl.vertexAttribPointer(posLoc,  3, gl.FLOAT, false, 28,  0);
+	     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+
+	     // ****** text object 475 *******
+	     gl.useProgram(prog475);
+	     gl.bindBuffer(gl.ARRAY_BUFFER, buf475);
+	     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibuf475);
+	     gl.uniformMatrix4fv( prMatLoc475, false, new Float32Array(prMatrix.getAsArray()) );
+	     gl.uniformMatrix4fv( mvMatLoc475, false, new Float32Array(mvMatrix.getAsArray()) );
+	     gl.uniform2f( textScaleLoc475, 0.002929688, 0.002929688);
+	     gl.enableVertexAttribArray( posLoc );
+	     gl.disableVertexAttribArray( colLoc );
+	     gl.vertexAttrib4f( colLoc, 0, 0, 0, 1 );
+	     gl.enableVertexAttribArray( texLoc475 );
+	     gl.vertexAttribPointer(texLoc475, 2, gl.FLOAT, false, 28, 12);
+	     gl.activeTexture(gl.TEXTURE0);
+	     gl.bindTexture(gl.TEXTURE_2D, texture475);
+	     gl.uniform1i( sampler475, 0);
+	     gl.enableVertexAttribArray( ofsLoc475 );
+	     gl.vertexAttribPointer(ofsLoc475, 2, gl.FLOAT, false, 28, 20);
+	     gl.vertexAttribPointer(posLoc,  3, gl.FLOAT, false, 28,  0);
+	     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+
+	     // ****** text object 476 *******
+	     gl.useProgram(prog476);
+	     gl.bindBuffer(gl.ARRAY_BUFFER, buf476);
+	     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibuf476);
+	     gl.uniformMatrix4fv( prMatLoc476, false, new Float32Array(prMatrix.getAsArray()) );
+	     gl.uniformMatrix4fv( mvMatLoc476, false, new Float32Array(mvMatrix.getAsArray()) );
+	     gl.uniform2f( textScaleLoc476, 0.002929688, 0.002929688);
+	     gl.enableVertexAttribArray( posLoc );
+	     gl.disableVertexAttribArray( colLoc );
+	     gl.vertexAttrib4f( colLoc, 0, 0, 0, 1 );
+	     gl.enableVertexAttribArray( texLoc476 );
+	     gl.vertexAttribPointer(texLoc476, 2, gl.FLOAT, false, 28, 12);
+	     gl.activeTexture(gl.TEXTURE0);
+	     gl.bindTexture(gl.TEXTURE_2D, texture476);
+	     gl.uniform1i( sampler476, 0);
+	     gl.enableVertexAttribArray( ofsLoc476 );
+	     gl.vertexAttribPointer(ofsLoc476, 2, gl.FLOAT, false, 28, 20);
+	     gl.vertexAttribPointer(posLoc,  3, gl.FLOAT, false, 28,  0);
+	     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+
+	     // ****** lines object 477 *******
+	     gl.useProgram(prog477);
+	     gl.bindBuffer(gl.ARRAY_BUFFER, buf477);
+	     gl.uniformMatrix4fv( prMatLoc477, false, new Float32Array(prMatrix.getAsArray()) );
+	     gl.uniformMatrix4fv( mvMatLoc477, false, new Float32Array(mvMatrix.getAsArray()) );
+	     gl.enableVertexAttribArray( posLoc );
+	     gl.disableVertexAttribArray( colLoc );
+	     gl.vertexAttrib4f( colLoc, 0, 0, 0, 1 );
+	     gl.lineWidth( 1 );
+	     gl.vertexAttribPointer(posLoc,  3, gl.FLOAT, false, 12,  0);
+	     gl.drawArrays(gl.LINES, 0, 14);
+
+	     // ****** text object 478 *******
+	     gl.useProgram(prog478);
+	     gl.bindBuffer(gl.ARRAY_BUFFER, buf478);
+	     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibuf478);
+	     gl.uniformMatrix4fv( prMatLoc478, false, new Float32Array(prMatrix.getAsArray()) );
+	     gl.uniformMatrix4fv( mvMatLoc478, false, new Float32Array(mvMatrix.getAsArray()) );
+	     gl.uniform2f( textScaleLoc478, 0.002929688, 0.002929688);
+	     gl.enableVertexAttribArray( posLoc );
+	     gl.disableVertexAttribArray( colLoc );
+	     gl.vertexAttrib4f( colLoc, 0, 0, 0, 1 );
+	     gl.enableVertexAttribArray( texLoc478 );
+	     gl.vertexAttribPointer(texLoc478, 2, gl.FLOAT, false, 28, 12);
+	     gl.activeTexture(gl.TEXTURE0);
+	     gl.bindTexture(gl.TEXTURE_2D, texture478);
+	     gl.uniform1i( sampler478, 0);
+	     gl.enableVertexAttribArray( ofsLoc478 );
+	     gl.vertexAttribPointer(ofsLoc478, 2, gl.FLOAT, false, 28, 20);
+	     gl.vertexAttribPointer(posLoc,  3, gl.FLOAT, false, 28,  0);
+	     gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
+
+	     // ****** lines object 479 *******
+	     gl.useProgram(prog479);
+	     gl.bindBuffer(gl.ARRAY_BUFFER, buf479);
+	     gl.uniformMatrix4fv( prMatLoc479, false, new Float32Array(prMatrix.getAsArray()) );
+	     gl.uniformMatrix4fv( mvMatLoc479, false, new Float32Array(mvMatrix.getAsArray()) );
+	     gl.enableVertexAttribArray( posLoc );
+	     gl.disableVertexAttribArray( colLoc );
+	     gl.vertexAttrib4f( colLoc, 0, 0, 0, 1 );
+	     gl.lineWidth( 1 );
+	     gl.vertexAttribPointer(posLoc,  3, gl.FLOAT, false, 12,  0);
+	     gl.drawArrays(gl.LINES, 0, 14);
+
+	     // ****** text object 480 *******
+	     gl.useProgram(prog480);
+	     gl.bindBuffer(gl.ARRAY_BUFFER, buf480);
+	     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibuf480);
+	     gl.uniformMatrix4fv( prMatLoc480, false, new Float32Array(prMatrix.getAsArray()) );
+	     gl.uniformMatrix4fv( mvMatLoc480, false, new Float32Array(mvMatrix.getAsArray()) );
+	     gl.uniform2f( textScaleLoc480, 0.002929688, 0.002929688);
+	     gl.enableVertexAttribArray( posLoc );
+	     gl.disableVertexAttribArray( colLoc );
+	     gl.vertexAttrib4f( colLoc, 0, 0, 0, 1 );
+	     gl.enableVertexAttribArray( texLoc480 );
+	     gl.vertexAttribPointer(texLoc480, 2, gl.FLOAT, false, 28, 12);
+	     gl.activeTexture(gl.TEXTURE0);
+	     gl.bindTexture(gl.TEXTURE_2D, texture480);
+	     gl.uniform1i( sampler480, 0);
+	     gl.enableVertexAttribArray( ofsLoc480 );
+	     gl.vertexAttribPointer(ofsLoc480, 2, gl.FLOAT, false, 28, 20);
+	     gl.vertexAttribPointer(posLoc,  3, gl.FLOAT, false, 28,  0);
+	     gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
+
+	     // ****** lines object 481 *******
+	     gl.useProgram(prog481);
+	     gl.bindBuffer(gl.ARRAY_BUFFER, buf481);
+	     gl.uniformMatrix4fv( prMatLoc481, false, new Float32Array(prMatrix.getAsArray()) );
+	     gl.uniformMatrix4fv( mvMatLoc481, false, new Float32Array(mvMatrix.getAsArray()) );
+	     gl.enableVertexAttribArray( posLoc );
+	     gl.disableVertexAttribArray( colLoc );
+	     gl.vertexAttrib4f( colLoc, 0, 0, 0, 1 );
+	     gl.lineWidth( 1 );
+	     gl.vertexAttribPointer(posLoc,  3, gl.FLOAT, false, 12,  0);
+	     gl.drawArrays(gl.LINES, 0, 12);
+
+	     // ****** text object 482 *******
+	     gl.useProgram(prog482);
+	     gl.bindBuffer(gl.ARRAY_BUFFER, buf482);
+	     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibuf482);
+	     gl.uniformMatrix4fv( prMatLoc482, false, new Float32Array(prMatrix.getAsArray()) );
+	     gl.uniformMatrix4fv( mvMatLoc482, false, new Float32Array(mvMatrix.getAsArray()) );
+	     gl.uniform2f( textScaleLoc482, 0.002929688, 0.002929688);
+	     gl.enableVertexAttribArray( posLoc );
+	     gl.disableVertexAttribArray( colLoc );
+	     gl.vertexAttrib4f( colLoc, 0, 0, 0, 1 );
+	     gl.enableVertexAttribArray( texLoc482 );
+	     gl.vertexAttribPointer(texLoc482, 2, gl.FLOAT, false, 28, 12);
+	     gl.activeTexture(gl.TEXTURE0);
+	     gl.bindTexture(gl.TEXTURE_2D, texture482);
+	     gl.uniform1i( sampler482, 0);
+	     gl.enableVertexAttribArray( ofsLoc482 );
+	     gl.vertexAttribPointer(ofsLoc482, 2, gl.FLOAT, false, 28, 20);
+	     gl.vertexAttribPointer(posLoc,  3, gl.FLOAT, false, 28,  0);
+	     gl.drawElements(gl.TRIANGLES, 30, gl.UNSIGNED_SHORT, 0);
+
+	     // ****** lines object 483 *******
+	     gl.useProgram(prog483);
+	     gl.bindBuffer(gl.ARRAY_BUFFER, buf483);
+	     gl.uniformMatrix4fv( prMatLoc483, false, new Float32Array(prMatrix.getAsArray()) );
+	     gl.uniformMatrix4fv( mvMatLoc483, false, new Float32Array(mvMatrix.getAsArray()) );
+	     gl.enableVertexAttribArray( posLoc );
+	     gl.disableVertexAttribArray( colLoc );
+	     gl.vertexAttrib4f( colLoc, 0, 0, 0, 1 );
+	     gl.lineWidth( 1 );
+	     gl.vertexAttribPointer(posLoc,  3, gl.FLOAT, false, 12,  0);
+	     gl.drawArrays(gl.LINES, 0, 24);
+
+	     gl.flush ();
+	   }
+
+  	   var vpx0 = {
+           415: 0
+  	     };
+	   var vpy0 = {
+           415: 0
+  	     };
+	   var vpWidths = {
+          415: 256
+  	     };
+	   var vpHeights = {
+           415: 256
+  	     };
+	   var activeModel = {
+          415: 415
+  	     };
+	   var activeProjection = {
+          415: 415
+  	     };
+
+  	   var whichSubscene = function(coords){
+         if (0 <= coords.x && coords.x <= 256 && 0 <= coords.y && coords.y <= 256) return(415);
+         return(415);
+       }
+
+       var translateCoords = function(subsceneid, coords){
+         return {x:coords.x - vpx0[subsceneid], y:coords.y - vpy0[subsceneid]};
+       }
+       
+       var vlen = function(v) {
+	     return sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2])
+	   }
+	   
+	   var xprod = function(a, b) {
+	     return [a[1]*b[2] - a[2]*b[1],
+	             a[2]*b[0] - a[0]*b[2],
+	             a[0]*b[1] - a[1]*b[0]];
+	   }
+
+	   var screenToVector = function(x, y) {
+	     var width = vpWidths[activeSubscene];
+	     var height = vpHeights[activeSubscene];
+	     var radius = max(width, height)/2.0;
+	     var cx = width/2.0;
+	     var cy = height/2.0;
+	     var px = (x-cx)/radius;
+	     var py = (y-cy)/radius;
+	     var plen = sqrt(px*px+py*py);
+	     if (plen > 1.e-6) { 
+	       px = px/plen;
+	       py = py/plen;
+	     }
+
+	     var angle = (SQRT2 - plen)/SQRT2*PI/2;
+	     var z = sin(angle);
+	     var zlen = sqrt(1.0 - z*z);
+	     px = px * zlen;
+	     py = py * zlen;
+	     return [px, py, z];
+	   }
+
+	   var rotBase;
+
+	   var trackballdown = function(x,y) {
+	     rotBase = screenToVector(x, y);
+	     saveMat.load(userMatrix[activeModel[activeSubscene]]);
+	   }
+	   
+	   var trackballmove = function(x,y) {
+	     var rotCurrent = screenToVector(x,y);
+	     var dot = rotBase[0]*rotCurrent[0] + 
+	   	       rotBase[1]*rotCurrent[1] + 
+	   	       rotBase[2]*rotCurrent[2];
+	     var angle = acos( dot/vlen(rotBase)/vlen(rotCurrent) )*180./PI;
+	     var axis = xprod(rotBase, rotCurrent);
+	     userMatrix[activeModel[activeSubscene]].load(saveMat);
+	     userMatrix[activeModel[activeSubscene]].rotate(angle, axis[0], axis[1], axis[2]);
+	     drawScene();
+	   }
+
+	   var y0zoom = 0;
+	   var zoom0 = 1;
+	   var zoomdown = function(x, y) {
+	     y0zoom = y;
+	     zoom0 = log(zoom[activeProjection[activeSubscene]]);
+	   }
+
+	   var zoommove = function(x, y) {
+	     zoom[activeProjection[activeSubscene]] = exp(zoom0 + (y-y0zoom)/height);
+	     drawScene();
+	   }
+
+	   var y0fov = 0;
+	   var fov0 = 1;
+	   var fovdown = function(x, y) {
+	     y0fov = y;
+	     fov0 = fov[activeProjection[activeSubscene]];
+	   }
+
+	   var fovmove = function(x, y) {
+	     fov[activeProjection[activeSubscene]] = max(1, min(179, fov0 + 180*(y-y0fov)/height));
+	     drawScene();
+	   }
+
+	   var mousedown = [trackballdown, zoomdown, fovdown];
+	   var mousemove = [trackballmove, zoommove, fovmove];
+
+	   function relMouseCoords(event){
+	     var totalOffsetX = 0;
+	     var totalOffsetY = 0;
+	     var currentElement = canvas;
+	   
+	     do{
+	       totalOffsetX += currentElement.offsetLeft;
+	       totalOffsetY += currentElement.offsetTop;
+	     }
+	     while(currentElement = currentElement.offsetParent)
+	   
+	     var canvasX = event.pageX - totalOffsetX;
+	     var canvasY = event.pageY - totalOffsetY;
+	   
+	     return {x:canvasX, y:canvasY}
+	   }
+	   
+	   canvas.onmousedown = function ( ev ){
+	     if (!ev.which) // Use w3c defns in preference to MS
+	       switch (ev.button) {
+	       case 0: ev.which = 1; break;
+	       case 1: 
+	       case 4: ev.which = 2; break;
+	       case 2: ev.which = 3;
+	     }
+	     drag = ev.which;
+	     var f = mousedown[drag-1];
+	     if (f) {
+	       var coords = relMouseCoords(ev);
+	       coords.y = height-coords.y;
+	       activeSubscene = whichSubscene(coords);
+	       coords = translateCoords(activeSubscene, coords);
+	       f(coords.x, coords.y); 
+	       ev.preventDefault();
+	     }
+	   }    
+
+	   canvas.onmouseup = function ( ev ){	
+	     drag = 0;
+	   }
+	   
+	   canvas.onmouseout = canvas.onmouseup;
+
+	   canvas.onmousemove = function ( ev ){
+	     if ( drag == 0 ) return;
+	     var f = mousemove[drag-1];
+	     if (f) {
+	       var coords = relMouseCoords(ev);
+	       coords.y = height - coords.y;
+	       coords = translateCoords(activeSubscene, coords);
+	       f(coords.x, coords.y);
+	     }
+	   }
+
+	   var wheelHandler = function(ev) {
+	     var del = 1.1;
+	     if (ev.shiftKey) del = 1.01;
+	     var ds = ((ev.detail || ev.wheelDelta) > 0) ? del : (1 / del);
+	     zoom[activeProjection[activeSubscene]] *= ds;
+	     drawScene();
+	     ev.preventDefault();
+	   };
+	   canvas.addEventListener("DOMMouseScroll", wheelHandler, false);
+	   canvas.addEventListener("mousewheel", wheelHandler, false);
+
+	}
+	</script>
+
+	<canvas id="canvas" width="1" height="1"></canvas> 
+        <p id="debug">
+	<img src="snapshot.png" alt="snapshot" width=257/><br>
+	You must enable Javascript to view this page properly.</p>
+    </div>
+    
+	<br>Drag mouse to rotate model. Use mouse wheel or middle button
+	to zoom it.
+	<hr>
+	<br>
+	Object written from rgl 0.95.1158 by writeWebGL.
+
+	</body>
+	</html>
