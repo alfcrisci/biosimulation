@@ -1,4 +1,0 @@
-biosimulation
-=============
-
-Analisi redlav
